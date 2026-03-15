@@ -11,7 +11,8 @@
     "test:supabase": "tsx scripts/test-supabase.ts",
     "test:openai": "tsx scripts/test-openai.ts",
     "setup": "tsx packages/mcp-server/src/setup.ts",
-    "seed:demo": "tsx scripts/seed-demo-data.ts"
+    "seed:demo": "tsx scripts/seed-demo-data.ts",
+    "clear": "tsx scripts/clear-data.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
