@@ -51,7 +51,7 @@ export function MemoryCard({
   index?: number;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const config = SOURCE_CONFIG[memory.source];
+  const config = SOURCE_CONFIG[memory.source] || { label: memory.source, color: "bg-gray-500", icon: "Terminal" };
   const Icon = ICONS[config.icon as keyof typeof ICONS] || Terminal;
   const metadata = memory.metadata || {};
   const isLong = memory.content.length > 120;
