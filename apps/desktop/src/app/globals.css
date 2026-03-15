@@ -127,3 +127,24 @@
     @apply font-sans;
   }
 }
+
+/* Theme-aware borders and cards */
+.themed-border {
+  border-color: var(--theme-border, rgba(255,255,255,0.06));
+  background: var(--theme-card, rgba(255,255,255,0.015));
+  transition: border-color 0.5s, background 0.5s;
+}
+.themed-border:hover {
+  background: var(--theme-card-hover, rgba(255,255,255,0.03));
+}
+
+/* Matrix scanline effect */
+.theme-matrix {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.015) 2px,
+    rgba(0, 255, 65, 0.015) 4px
+  );
+}

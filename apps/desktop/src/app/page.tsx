@@ -17,11 +17,15 @@ import { Settings } from "@/components/settings";
 import { VectorGlobe } from "@/components/vector-globe";
 import { ActivityChart } from "@/components/activity-chart";
 import { SourceRings } from "@/components/source-rings";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { getTheme } from "@/lib/themes";
 import { Zap, Sparkles, Link2, SlidersHorizontal } from "lucide-react";
 import Image from "next/image";
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
+  const [themeId, setThemeId] = useState("midnight");
+  const theme = getTheme(themeId);
   const [tab, setTab] = useState<"memories" | "connections" | "settings">("memories");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -108,12 +112,35 @@ export default function Dashboard() {
   const isShowingSearch = !!debouncedQuery;
 
   return (
-    <div className="min-h-screen bg-[#09090b] selection:bg-white/10">
+    <div
+      className="min-h-screen transition-colors duration-500"
+      style={{
+        background: theme.bg,
+        color: theme.text,
+        // CSS custom properties for child components
+        "--theme-border": theme.border,
+        "--theme-card": theme.card,
+        "--theme-card-hover": theme.cardHover,
+        "--theme-text": theme.text,
+        "--theme-text-secondary": theme.textSecondary,
+        "--theme-text-muted": theme.textMuted,
+        "--theme-accent": theme.accent,
+      } as React.CSSProperties}
+    >
       {/* Dot grid background */}
-      <div className="fixed inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(${theme.dotGrid} 1px, transparent 1px)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
 
       {/* Subtle top glow */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-500/[0.03] rounded-full blur-[120px] pointer-events-none" />
+      <div
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[120px] pointer-events-none"
+        style={{ background: theme.topGlow }}
+      />
 
       <div className="relative max-w-4xl mx-auto px-6 py-10">
         {/* Header */}
@@ -137,6 +164,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeSwitcher active={themeId} onChange={setThemeId} />
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/[0.15]">
               <div className="relative flex items-center justify-center">
                 <span className="absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75 animate-ping" />
@@ -157,17 +185,17 @@ export default function Dashboard() {
         {/* Visualizations */}
         <section className="grid grid-cols-5 gap-3 mb-8">
           {/* Vector Globe — 3 cols */}
-          <div className="col-span-3 rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+          <div className="col-span-3 rounded-xl themed-border overflow-hidden">
             <VectorGlobe />
           </div>
           {/* Source Rings — 2 cols */}
-          <div className="col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 flex items-center justify-center">
+          <div className="col-span-2 rounded-xl themed-border p-4 flex items-center justify-center">
             <SourceRings />
           </div>
         </section>
 
         {/* Activity Chart */}
-        <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 mb-8">
+        <section className="rounded-xl themed-border p-4 mb-8">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-medium">Capture Activity</span>
             <span className="text-[9px] text-neutral-700 font-mono">Per hour by source</span>

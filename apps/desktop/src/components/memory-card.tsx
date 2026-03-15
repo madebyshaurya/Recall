@@ -64,7 +64,7 @@ export function MemoryCard({
     >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full text-left group relative rounded-lg border border-white/[0.04] hover:border-white/[0.08] bg-white/[0.015] hover:bg-white/[0.03] transition-all duration-150"
+        className="w-full text-left group relative rounded-lg themed-border transition-all duration-150"
       >
         {/* Compact row */}
         <div className="flex items-center gap-2.5 px-3 py-2">
