@@ -31,74 +31,44 @@
 
 ---
 
-## Pitch Script (3 minutes)
+## Pitch Script — 2 MINUTES (strict)
 
-### SLIDE 1: The Hook (20 seconds)
+**Format:** 2 min pitch + 2 min Q&A (sponsor) or 2.5 min pitch + 2.5 min Q&A (rounds 1 & 2)
 
-> "How many apps did you use today? Slack, Notion, VS Code, Chrome, your AI assistant. Now think about this — **your AI coding assistant is blind.** It can't see your Slack threads. It doesn't know about your Notion docs. It has zero memory of yesterday's conversation. Every session starts from scratch."
+### [0:00–0:15] THE HOOK
 
-### SLIDE 2: The Problem (20 seconds)
+> "Your AI assistant uses 9 apps worth of context — but remembers none of it. Every session starts blind. **Recall fixes that.**"
 
-> "Knowledge workers lose **30% of their day** searching for information they've already seen. And AI assistants — the tools that are supposed to help — are trapped in their own silo. Your Claude Code session has no idea that your team discussed the exact bug you're fixing in Slack yesterday."
+### [0:15–0:30] WHAT IT IS
 
-**Slide content:** Show the fragmented workflow — Slack in one tab, Notion in another, VS Code, browser. All disconnected.
+> "Recall is a unified AI memory. It captures your screen activity, Slack conversations, Notion docs, and past AI sessions — embeds everything semantically — and exposes it to any AI agent via the Model Context Protocol. One query, all your context."
 
-### SLIDE 3: Introducing Recall (15 seconds)
+### [0:30–1:15] LIVE DEMO (45 seconds — this wins it)
 
-> "That's why we built **Recall** — the first unified AI memory for your desktop. Recall captures everything you do — screen activity, Slack conversations, Notion docs, even your past AI sessions — and creates a single, searchable semantic memory. Any AI agent can query it."
+**Show dashboard** (5s): "Here's Recall running — memories from 5 different sources, real-time."
 
-**Slide content:** Architecture diagram. One sentence: "Screen + Slack + Notion + AI Agents → Semantic Memory → MCP → Any Agent"
-
-### SLIDE 4: LIVE DEMO — The "Wow" (60 seconds)
-
-**Step 1:** Show the Recall dashboard with data flowing in from multiple sources.
-
-**Step 2:** Open Claude Code. Ask:
-> *"What do you know about the auth token refresh issue our team has been working on?"*
-
-**Step 3:** Claude Code queries Recall via MCP and returns:
-- A Slack thread where the team discussed the bug
-- A Notion troubleshooting doc
-- A past Claude Code session where you debugged it
-- A Stack Overflow page you viewed
-
-> "Without Recall, Claude would've said 'I don't have context.' With Recall, it pulled relevant information from **four different sources** — Slack, Notion, screen captures, and a past AI session — in one query."
-
-**Step 4:** Show a proactive notification popping up:
-> "And Recall doesn't just respond. It **proactively** notifies you when your current work matches relevant context from other tools."
-
-### SLIDE 5: How It Works (30 seconds)
-
-> "Under the hood, Recall uses an event-driven capture engine that watches your screen, detects app switches, and describes screenshots using GPT-4.1-nano vision. Everything gets embedded into 1,536-dimensional vectors and stored in Supabase pgvector AND Moorcheh AI for semantic retrieval."
-
-**Slide content:**
+**Switch to Claude Code** and type:
 ```
-Capture → GPT-4.1-nano (vision) → Embedding → Supabase pgvector + Moorcheh
-                                                         ↓
-                                                    MCP Server
-                                                         ↓
-                                              Claude Code / Cursor
+What do you know about the auth token refresh issue our team has been working on?
 ```
 
-> "Moorcheh's semantic memory engine is central — it gives us high-fidelity storage, stateful context, and **explainable retrieval**. We can tell you not just what was found, but *why* it was relevant."
+**Claude responds** with Slack threads + Notion docs + past AI sessions + screen captures.
 
-### SLIDE 6: Production Ready (15 seconds)
+> "Four sources. One query. Zero copy-pasting. Claude went from blind to fully context-aware."
 
-> "This isn't a prototype. Recall runs at **less than 20 cents a day**. It captures intelligently — event-driven with deduplication, not brute force. Everything runs locally on your machine. Your data stays in **your own** Supabase instance. And the MCP standard means it works with any compatible agent, today and in the future."
+**Quick save** (10s): Type `Remember that the API rate limit was increased to 1000 req/min` → saved instantly.
 
-**Slide content:**
-- **$0.20/day** operating cost
-- **Event-driven** capture with 90% dedup
-- **Privacy-first** — your Supabase, your data
-- **MCP standard** — works with any agent
+### [1:15–1:40] HOW & WHY
 
-### SLIDE 7: Growth & Vision (15 seconds)
+> "GPT-4.1-nano describes your screen. text-embedding-3-small creates 1536-dim vectors. Supabase pgvector and Moorcheh AI store and retrieve semantically. All for under 20 cents a day. Event-driven capture with dedup — no wasted resources. Privacy-first — your data stays in your own database."
 
-> "Today, Recall works for individual developers. Tomorrow — team-based unified memory. Imagine onboarding a new engineer who can ask their AI assistant: 'What does this codebase do?' and get answers from months of team context. Personal knowledge graphs. Domain-specific versions for legal, medical, engineering."
+### [1:40–1:55] FUTURE
 
-### SLIDE 8: Close (5 seconds)
+> "Today: individual developers. Tomorrow: team-based unified memory. Onboard a new engineer who can ask their AI 'how does this codebase work?' and get answers from months of team context."
 
-> "Recall. Giving your AI the memory it deserves. Thank you."
+### [1:55–2:00] CLOSE
+
+> "Recall. Your AI's memory, unified. Thank you."
 
 ---
 
