@@ -74,10 +74,10 @@ export function MemoryCard({
           />
 
           {/* Icon */}
-          <Icon className="h-3.5 w-3.5 text-neutral-500 shrink-0" />
+          <Icon className="h-3.5 w-3.5 themed-text-muted shrink-0" />
 
           {/* Content preview */}
-          <span className="text-[12px] text-neutral-300 truncate flex-1 min-w-0">
+          <span className="text-[12px] themed-text-secondary truncate flex-1 min-w-0">
             {expanded ? memory.content : truncate(memory.content, 120)}
           </span>
 
@@ -90,17 +90,17 @@ export function MemoryCard({
             )}
 
             {metadata.app_name && (
-              <span className="text-[10px] text-neutral-600 font-mono hidden sm:inline">
+              <span className="text-[10px] themed-text-muted font-mono hidden sm:inline">
                 {metadata.app_name as string}
               </span>
             )}
 
-            <span className="text-[10px] text-neutral-600 font-mono w-6 text-right">
+            <span className="text-[10px] themed-text-muted font-mono w-6 text-right">
               {timeAgo(memory.captured_at)}
             </span>
 
             <ChevronDown
-              className={`h-3 w-3 text-neutral-700 transition-transform duration-150 ${
+              className={`h-3 w-3 themed-text-muted transition-transform duration-150 ${
                 expanded ? "rotate-180" : ""
               }`}
             />
@@ -119,7 +119,7 @@ export function MemoryCard({
             >
               <div className="px-3 pb-3 pt-0">
                 <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-3">
-                  <p className="text-[12px] text-neutral-300 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-[12px] themed-text-secondary leading-relaxed whitespace-pre-wrap">
                     {memory.content}
                   </p>
 

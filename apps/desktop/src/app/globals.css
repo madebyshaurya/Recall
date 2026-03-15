@@ -138,6 +138,17 @@
   background: var(--theme-card-hover, rgba(255,255,255,0.03));
 }
 
+/* Theme-aware text */
+.themed-text {
+  color: var(--theme-text, #fafafa);
+}
+.themed-text-secondary {
+  color: var(--theme-text-secondary, #a3a3a3);
+}
+.themed-text-muted {
+  color: var(--theme-text-muted, #525252);
+}
+
 /* Matrix scanline effect */
 .theme-matrix {
   background-image: repeating-linear-gradient(
