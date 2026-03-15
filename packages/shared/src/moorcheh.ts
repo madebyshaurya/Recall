@@ -19,29 +19,16 @@ async function moorchehFetch(path: string, options: RequestInit = {}) {
   return res.json();
 }
 
-// Namespace names for each source
-const NAMESPACES = ['recall-screen', 'recall-slack', 'recall-notion', 'recall-agents', 'recall-mcp'] as const;
+// Single namespace to stay within free tier (5 namespace limit)
+const NAMESPACE = 'recall-screen';
 
 export async function initMoorchehNamespaces(): Promise<void> {
-  for (const ns of NAMESPACES) {
-    await moorchehFetch('/namespaces', {
-      method: 'POST',
-      body: JSON.stringify({ namespace_name: ns, type: 'text' }),
-    });
-  }
-  console.log('[moorcheh] Namespaces initialized');
-}
-
-function getNamespace(source: string): string {
-  switch (source) {
-    case 'screen': return 'recall-screen';
-    case 'slack': return 'recall-slack';
-    case 'notion': return 'recall-notion';
-    case 'claude_code':
-    case 'cursor': return 'recall-agents';
-    case 'mcp_log': return 'recall-mcp';
-    default: return 'recall-screen';
-  }
+  // Try to create, will 409 if exists — that's fine
+  await moorchehFetch('/namespaces', {
+    method: 'POST',
+    body: JSON.stringify({ namespace_name: NAMESPACE, type: 'text' }),
+  });
+  console.log('[moorcheh] Namespace ready');
 }
 
 export async function storeMoorcheh(
@@ -49,7 +36,7 @@ export async function storeMoorcheh(
   source: string,
   metadata: Record<string, unknown> = {}
 ): Promise<void> {
-  const namespace = getNamespace(source);
+  const namespace = NAMESPACE;
   const docId = `${source}-${Date.now()}`;
 
   await moorchehFetch(`/namespaces/${namespace}/documents`, {
@@ -82,9 +69,7 @@ export async function searchMoorcheh(
   source?: string,
   limit: number = 10
 ): Promise<MoorchehSearchResult[]> {
-  const namespaces = source
-    ? [getNamespace(source)]
-    : [...NAMESPACES];
+  const namespaces = [NAMESPACE];
 
   const data = await moorchehFetch('/search', {
     method: 'POST',
