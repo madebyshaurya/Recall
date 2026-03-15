@@ -1,0 +1,212 @@
+# Recall — Pitch & Demo Script
+
+## Target Prize Categories
+
+| Prize | Fit | Strategy |
+|-------|-----|----------|
+| **Moorcheh AI: Best AI App with Efficient Memory** | PRIMARY | Direct Moorcheh integration, dual-write, semantic retrieval across sources |
+| **Bitdeer: Best Production-Ready AI Tool** | STRONG | Real-world pain point, production architecture, < $0.20/day cost |
+| **Google: Best AI for Community Impact** | GOOD | Empowers every knowledge worker, open-source, MCP standard |
+
+---
+
+## Bold Facts for Slides
+
+### The Problem (use these stats)
+- **Knowledge workers switch apps 1,200 times per day** (Harvard Business Review)
+- **The average worker uses 9.4 apps daily** and spends **30% of their day searching for information** (McKinsey)
+- **$1.3 trillion in productivity lost annually** in the US alone due to information silos (IDC)
+- AI coding assistants are now used by **92% of developers** but they have **zero memory** across sessions
+- The average developer has context spread across **6+ tools**: IDE, Slack, Docs, Browser, Terminal, AI Assistant
+
+### The Solution (impact stats)
+- Recall captures context **every time you switch apps** — zero manual effort
+- Semantic search across **6 data sources** in one query
+- Costs less than **$0.20/day** to run — cheaper than a cup of coffee
+- Works with **any MCP-compatible agent** — Claude Code, Cursor, and growing
+- **5 MCP tools** exposed to AI agents: search, context, save, source filter, sync
+- Screen descriptions via **GPT-4.1-nano** — understands diagrams, code, and UI, not just text
+- **1,536-dimensional embeddings** for precise semantic matching
+- **Moorcheh AI** provides explainable retrieval — you can ask *why* a result was returned
+
+---
+
+## Pitch Script (3 minutes)
+
+### SLIDE 1: The Hook (20 seconds)
+
+> "How many apps did you use today? Slack, Notion, VS Code, Chrome, your AI assistant. Now think about this — **your AI coding assistant is blind.** It can't see your Slack threads. It doesn't know about your Notion docs. It has zero memory of yesterday's conversation. Every session starts from scratch."
+
+### SLIDE 2: The Problem (20 seconds)
+
+> "Knowledge workers lose **30% of their day** searching for information they've already seen. And AI assistants — the tools that are supposed to help — are trapped in their own silo. Your Claude Code session has no idea that your team discussed the exact bug you're fixing in Slack yesterday."
+
+**Slide content:** Show the fragmented workflow — Slack in one tab, Notion in another, VS Code, browser. All disconnected.
+
+### SLIDE 3: Introducing Recall (15 seconds)
+
+> "That's why we built **Recall** — the first unified AI memory for your desktop. Recall captures everything you do — screen activity, Slack conversations, Notion docs, even your past AI sessions — and creates a single, searchable semantic memory. Any AI agent can query it."
+
+**Slide content:** Architecture diagram. One sentence: "Screen + Slack + Notion + AI Agents → Semantic Memory → MCP → Any Agent"
+
+### SLIDE 4: LIVE DEMO — The "Wow" (60 seconds)
+
+**Step 1:** Show the Recall dashboard with data flowing in from multiple sources.
+
+**Step 2:** Open Claude Code. Ask:
+> *"What do you know about the auth token refresh issue our team has been working on?"*
+
+**Step 3:** Claude Code queries Recall via MCP and returns:
+- A Slack thread where the team discussed the bug
+- A Notion troubleshooting doc
+- A past Claude Code session where you debugged it
+- A Stack Overflow page you viewed
+
+> "Without Recall, Claude would've said 'I don't have context.' With Recall, it pulled relevant information from **four different sources** — Slack, Notion, screen captures, and a past AI session — in one query."
+
+**Step 4:** Show a proactive notification popping up:
+> "And Recall doesn't just respond. It **proactively** notifies you when your current work matches relevant context from other tools."
+
+### SLIDE 5: How It Works (30 seconds)
+
+> "Under the hood, Recall uses an event-driven capture engine that watches your screen, detects app switches, and describes screenshots using GPT-4.1-nano vision. Everything gets embedded into 1,536-dimensional vectors and stored in Supabase pgvector AND Moorcheh AI for semantic retrieval."
+
+**Slide content:**
+```
+Capture → GPT-4.1-nano (vision) → Embedding → Supabase pgvector + Moorcheh
+                                                         ↓
+                                                    MCP Server
+                                                         ↓
+                                              Claude Code / Cursor
+```
+
+> "Moorcheh's semantic memory engine is central — it gives us high-fidelity storage, stateful context, and **explainable retrieval**. We can tell you not just what was found, but *why* it was relevant."
+
+### SLIDE 6: Production Ready (15 seconds)
+
+> "This isn't a prototype. Recall runs at **less than 20 cents a day**. It captures intelligently — event-driven with deduplication, not brute force. Everything runs locally on your machine. Your data stays in **your own** Supabase instance. And the MCP standard means it works with any compatible agent, today and in the future."
+
+**Slide content:**
+- **$0.20/day** operating cost
+- **Event-driven** capture with 90% dedup
+- **Privacy-first** — your Supabase, your data
+- **MCP standard** — works with any agent
+
+### SLIDE 7: Growth & Vision (15 seconds)
+
+> "Today, Recall works for individual developers. Tomorrow — team-based unified memory. Imagine onboarding a new engineer who can ask their AI assistant: 'What does this codebase do?' and get answers from months of team context. Personal knowledge graphs. Domain-specific versions for legal, medical, engineering."
+
+### SLIDE 8: Close (5 seconds)
+
+> "Recall. Giving your AI the memory it deserves. Thank you."
+
+---
+
+## Slide Deck Content (for each slide)
+
+### Slide 1: Title
+- **Recall** — The Unified AI Memory
+- One line: "Your AI agents are smart, but they're blind to your full context."
+
+### Slide 2: The Problem
+- Stat: "Knowledge workers spend 30% of their day searching for information"
+- Visual: Fragmented apps (Slack, Notion, VS Code, Chrome) all disconnected
+- "Your AI has ZERO memory across sessions and tools"
+
+### Slide 3: The Solution
+- Architecture diagram (simple)
+- "6 data sources → 1 semantic memory → any AI agent"
+
+### Slide 4: Demo
+- Live or embedded video
+- "Watch Claude Code find relevant Slack threads, Notion docs, and past sessions — all from one query"
+
+### Slide 5: Technical Architecture
+- Capture pipeline: Event-driven + GPT-4.1-nano + text-embedding-3-small
+- Storage: Supabase pgvector + Moorcheh AI
+- Consumer: MCP Server → Claude Code / Cursor
+- "Powered by Moorcheh's semantic memory engine for explainable retrieval"
+
+### Slide 6: Why It Wins
+- $0.20/day cost
+- Privacy-first (your data, your Supabase)
+- MCP standard (future-proof)
+- Production-grade architecture
+
+### Slide 7: Future
+- Team-based unified memory
+- Personal knowledge graphs
+- Domain-specific versions
+- "The infrastructure layer for the AI-native workplace"
+
+### Slide 8: Thank You
+- "Recall: Giving your AI the memory it deserves"
+- GitHub link
+- QR code to demo
+
+---
+
+## Devpost Submission Text
+
+### Inspiration
+
+Every day, knowledge workers drown in fragmented context. We use 9+ apps daily, and our AI assistants — the tools meant to boost our productivity — are completely blind to this context. Your Claude Code session doesn't know about the Slack thread where your team discussed the bug you're fixing. Your Cursor assistant can't see the Notion doc with the architecture decisions. Every AI session starts from scratch.
+
+We asked: **What if your AI agent could remember everything?**
+
+### What it does
+
+Recall is a desktop companion that creates a unified, semantic memory across your entire digital workspace:
+
+- **Screen Activity** — Captures screenshots on app switches, describes them with GPT-4.1-nano vision, and indexes the semantic meaning
+- **Slack Messages** — Connects to your workspace via OAuth and indexes channel conversations
+- **Notion Pages** — Connects via OAuth and indexes your docs
+- **AI Agent Sessions** — Watches Claude Code and Cursor conversation histories
+- **Explicit Memories** — AI agents can save important context via MCP
+
+All of this is embedded into 1,536-dimensional vectors and made searchable via a Model Context Protocol (MCP) server. Any MCP-compatible AI agent can query your unified memory with natural language.
+
+### How we built it
+
+- **Capture Engine** (Node.js/TypeScript) — Event-driven screen capture with macOS screencapture CLI, hybrid timing (app-switch detection + 60s fallback), cosine-similarity deduplication
+- **Vision AI** — GPT-4.1-nano describes screenshots semantically (understanding diagrams, code, UI elements)
+- **Embeddings** — text-embedding-3-small generates 1,536-dim vectors for all content
+- **Storage** — Supabase Postgres with pgvector extension for fast cosine similarity search
+- **Moorcheh AI** — Dual-write to Moorcheh's semantic memory engine for explainable retrieval with source namespaces
+- **MCP Server** (TypeScript) — 5 tools: search_memory, get_recent_context, get_source_context, save_memory, sync_source
+- **Dashboard** (Next.js 16 + React 19) — Real-time memory timeline, semantic search, source filters, Slack/Notion OAuth connections
+- **Setup Wizard** — CLI tool that auto-detects Claude Code/Cursor and configures MCP
+
+### Challenges we ran into
+
+- Balancing capture frequency vs. API costs (solved with event-driven + dedup — screens that don't change aren't re-processed)
+- Supabase pgvector RPC embedding format compatibility
+- Moorcheh free tier namespace limits (consolidated to single namespace with source metadata)
+- Making semantic search feel instant despite network round-trips to embedding API
+
+### Accomplishments that we're proud of
+
+- **Cross-source context retrieval** — A single query returns relevant results from Slack, Notion, screen captures, AND past AI sessions
+- **Under $0.20/day** operating cost for continuous capture
+- **5 MCP tools** that work with any compatible agent out of the box
+- **One-command setup** — `npm run setup` auto-configures everything
+- **Proactive suggestions** — Desktop notifications when your current work matches relevant context from other tools
+
+### What we learned
+
+- The MCP protocol is a powerful standard for making AI agents composable
+- Event-driven capture with deduplication is far more efficient than continuous recording
+- GPT-4.1-nano is remarkably good at understanding screenshots semantically, not just extracting text
+- Moorcheh's semantic memory engine provides a richer retrieval experience than raw vector search alone
+
+### What's next for Recall
+
+- **Team-based unified memory** — Shared context across teams with permission controls
+- **Personal knowledge graphs** — Evolve from flat memories to connected knowledge
+- **More integrations** — Google Drive, GitHub, Linear, email
+- **Domain-specific versions** — Legal, medical, engineering
+- **Advanced proactive agents** — AI that takes action (draft emails, summarize meetings) based on observed context
+
+### Built with
+
+TypeScript, Node.js, Next.js, React, Supabase, pgvector, OpenAI GPT-4.1-nano, OpenAI text-embedding-3-small, Moorcheh AI, Model Context Protocol (MCP), Tailwind CSS, shadcn/ui, Framer Motion
