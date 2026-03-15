@@ -15,26 +15,16 @@ async function main() {
 
   console.log('\nClearing all data...\n');
 
-  const { count: memCount, error: memErr } = await supabase
-    .from('memories')
-    .delete()
-    .neq('id', '00000000-0000-0000-0000-000000000000')
-    .select('*', { count: 'exact', head: true });
+  const { error: e1 } = await supabase.from('memories').delete().neq('source', '___never___');
+  console.log(e1 ? `✗ Memories: ${e1.message}` : '✓ Memories cleared');
 
-  if (memErr) {
-    // delete doesn't return count easily, just do it
-    await supabase.from('memories').delete().gte('captured_at', '1970-01-01');
-  }
+  const { error: e2 } = await supabase.from('connections').delete().neq('provider', '___never___');
+  console.log(e2 ? `✗ Connections: ${e2.message}` : '✓ Connections cleared');
 
-  console.log('✓ Memories cleared');
+  const { error: e3 } = await supabase.from('capture_settings').delete().neq('capture_interval_seconds', -999);
+  console.log(e3 ? `✗ Settings: ${e3.message}` : '✓ Settings cleared');
 
-  await supabase.from('connections').delete().gte('connected_at', '1970-01-01');
-  console.log('✓ Connections cleared');
-
-  await supabase.from('capture_settings').delete().gte('created_at', '1970-01-01');
-  console.log('✓ Settings cleared');
-
-  console.log('\n🧹 All data cleared. Run `npm run seed:demo` to re-seed demo data.');
+  console.log('\n🧹 All data cleared. Run `npm run seed:demo` to re-seed.');
 }
 
 main().catch(console.error);
