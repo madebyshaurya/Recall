@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import type { Memory, SearchResult } from "@/lib/types";
 import { StatsBar } from "@/components/stats-bar";
@@ -16,6 +16,7 @@ import { Connections } from "@/components/connections";
 import { Brain, Zap, Sparkles, Link2 } from "lucide-react";
 
 export default function Dashboard() {
+  const queryClient = useQueryClient();
   const [tab, setTab] = useState<"memories" | "connections">("memories");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -25,6 +26,26 @@ export default function Dashboard() {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 400);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Supabase Realtime — listen for new memories
+  useEffect(() => {
+    const channel = supabase
+      .channel("memories-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "memories" },
+        () => {
+          // Invalidate all queries to refresh data
+          queryClient.invalidateQueries({ queryKey: ["memories"] });
+          queryClient.invalidateQueries({ queryKey: ["stats"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   // Fetch timeline memories
   const { data: memories = [] } = useQuery<Memory[]>({
