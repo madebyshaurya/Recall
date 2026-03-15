@@ -40,7 +40,7 @@ function detectAgents(): AgentConfig[] {
   const agents: AgentConfig[] = [
     {
       name: 'Claude Code',
-      configPath: join(HOME, '.claude', 'settings.json'),
+      configPath: join(HOME, '.claude.json'),
       detected: false,
       configFormat: 'claude',
     },
@@ -258,7 +258,7 @@ ${GREEN}${BOLD}Setup complete!${RESET}
 
 ${BOLD}Next steps:${RESET}
   1. Start the capture engine:
-     ${CYAN}pnpm dev:capture${RESET}
+     ${CYAN}npm run dev:capture${RESET}
 
   2. Restart your AI agent(s) to pick up the new MCP config
 
