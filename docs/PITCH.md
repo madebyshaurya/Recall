@@ -146,6 +146,69 @@ Capture → GPT-4.1-nano (vision) → Embedding → Supabase pgvector + Moorcheh
 
 ---
 
+## Exact Claude Code Demo Commands
+
+Run these in order during the live demo. Make sure `npm run seed:demo` has been run first.
+
+### Query 1: Cross-Source Search (THE WOW MOMENT)
+```
+What do you know about the auth token refresh issue our team has been working on?
+```
+**What happens:** Claude calls `search_memory`. Returns hits from:
+- Slack thread (team discussing the bug)
+- Notion doc (troubleshooting steps)
+- Screen capture (VS Code with auth.ts open)
+- Past Claude Code session (debugging conversation)
+
+**What to say:** "Without Recall, Claude would say 'I don't have context.' With Recall, it pulled from FOUR different sources in one query."
+
+### Query 2: Source-Specific Search
+```
+Show me what my Slack team said about the deployment
+```
+**What happens:** Claude calls `get_source_context` with source="slack". Returns the #devops CI/CD pipeline message.
+
+**What to say:** "You can also filter by source — just Slack, just Notion, just screen captures."
+
+### Query 3: Save a Memory
+```
+Remember that the API rate limit was increased to 1000 requests per minute last week
+```
+**What happens:** Claude calls `save_memory`. Confirms stored.
+
+**What to say:** "It goes both ways. AI agents don't just READ from the memory — they WRITE to it."
+
+### Query 4: Retrieve What You Just Saved
+```
+What do you know about our API rate limits?
+```
+**What happens:** Claude calls `search_memory`. Returns what you just saved 10 seconds ago.
+
+**What to say:** "And it's immediately searchable. Bidirectional memory."
+
+### Query 5: Recent Context
+```
+What was on my screen in the last hour?
+```
+**What happens:** Claude calls `get_recent_context`. Returns your actual recent screen captures.
+
+**What to say:** "Recall sees everything you do — every app switch, every document, every code file."
+
+### Query 6: Sync Trigger (if time allows)
+```
+Sync my Slack messages to get the latest
+```
+**What happens:** Claude calls `sync_source`. Reports items synced.
+
+**What to say:** "AI agents can even trigger data refreshes. No manual syncing needed."
+
+### Priority Order
+**Must show:** Query 1, 3, 4 (cross-source search + bidirectional memory)
+**Nice to show:** Query 5 (recent context)
+**Bonus:** Query 2, 6 (source filter, sync)
+
+---
+
 ## Devpost Submission Text
 
 ### Inspiration
