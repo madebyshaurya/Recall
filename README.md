@@ -16,7 +16,17 @@
   <a href="#-quick-start">Quick Start</a> &nbsp;·&nbsp; <a href="#-how-it-works">How It Works</a> &nbsp;·&nbsp; <a href="#-features">Features</a> &nbsp;·&nbsp; <a href="#-mcp-tools">MCP Tools</a> &nbsp;·&nbsp; <a href="#-dashboard">Dashboard</a>
 </p>
 
+<p align="center">
+  <a href="https://youtu.be/vYzAWQ6Swgs">
+    <img src="https://img.shields.io/badge/Demo_Video-Watch_on_YouTube-red?style=for-the-badge&logo=youtube" alt="Demo Video" />
+  </a>
+</p>
+
 ---
+
+<p align="center">
+  <img src="assets/screenshots/dashboard-overview.png" alt="Recall Dashboard" width="700" />
+</p>
 
 ## The Problem
 
@@ -156,6 +166,10 @@ Your AI agent gets 5 tools:
 
 Real-time web dashboard at `http://localhost:3000`:
 
+<p align="center">
+  <img src="assets/screenshots/dashboard-scale.png" alt="Dashboard at scale — 1500+ memories" width="700" />
+</p>
+
 - **Memory Timeline** — Compact, expandable cards for every captured memory
 - **Semantic Search** — Type a question, get results ranked by relevance
 - **Source Filters** — All, Screen, Slack, Notion, AI Agents
@@ -164,6 +178,16 @@ Real-time web dashboard at `http://localhost:3000`:
 - **Connections** — OAuth connect Slack & Notion, one-click sync
 - **Settings** — Capture interval, idle timeout, excluded apps, notification controls
 - **6 Themes** — Midnight, Matrix, Cyberpunk, Ocean, Ember, Light
+
+<p align="center">
+  <img src="assets/screenshots/memory-timeline.png" alt="Memory timeline with cross-source context" width="700" />
+</p>
+
+### Setup Wizard
+
+<p align="center">
+  <img src="assets/screenshots/setup-wizard.png" alt="Setup wizard auto-detecting AI agents" width="700" />
+</p>
 
 ---
 
