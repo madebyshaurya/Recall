@@ -1,0 +1,10 @@
+.env
+.env.local
+.env.*.local
+node_modules/
+dist/
+target/
+.firecrawl/
+*.pyc
+__pycache__/
+.DS_Store

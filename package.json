@@ -1,0 +1,17 @@
+{
+  "name": "recall",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unified AI memory for your desktop — captures screen, Slack, Notion, and AI agent sessions into a searchable semantic memory layer exposed via MCP",
+  "scripts": {
+    "dev:capture": "tsx packages/capture-engine/src/index.ts",
+    "dev:mcp": "tsx packages/mcp-server/src/index.ts",
+    "dev:desktop": "cd apps/desktop && pnpm tauri dev",
+    "dev:moorcheh": "cd packages/moorcheh-bridge && uvicorn main:app --port 8100 --reload",
+    "test:supabase": "tsx scripts/test-supabase.ts",
+    "test:openai": "tsx scripts/test-openai.ts",
+    "seed:demo": "tsx scripts/seed-demo-data.ts"
+  },
+  "keywords": ["ai", "memory", "mcp", "semantic-search", "screen-capture", "unified-memory"],
+  "license": "MIT"
+}
