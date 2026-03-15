@@ -4,6 +4,7 @@ import { captureScreen, getActiveWindow } from './fallback-capture.js';
 import { processCapture } from './pipeline.js';
 import { initMoorchehNamespaces } from '../../../packages/shared/src/moorcheh.js';
 import { startAgentWatcher } from './agent-watcher.js';
+import { startSuggestionLoop } from './suggestions.js';
 
 const WINDOW_POLL_INTERVAL = 2000;    // Check window title every 2s
 const FALLBACK_CAPTURE_INTERVAL = 60000; // Force capture every 60s
@@ -89,6 +90,9 @@ async function main() {
   console.log(`  Idle timeout: ${IDLE_TIMEOUT / 1000}s`);
   // Start AI agent session watcher
   startAgentWatcher();
+
+  // Start proactive suggestions (every 5 min)
+  startSuggestionLoop(300000);
 
   console.log('\nCapturing...\n');
 
