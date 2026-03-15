@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { SOURCE_CONFIG, type MemorySource } from "@/lib/types";
 
 const FILTERS: (MemorySource | "all")[] = [
@@ -20,7 +19,7 @@ export function SourceFilter({
   onChange: (source: MemorySource | "all") => void;
 }) {
   return (
-    <div className="flex gap-1.5">
+    <div className="flex gap-1">
       {FILTERS.map((source) => {
         const isActive = active === source;
         const config = source === "all" ? null : SOURCE_CONFIG[source];
@@ -28,27 +27,20 @@ export function SourceFilter({
           <button
             key={source}
             onClick={() => onChange(source)}
-            className="focus:outline-none"
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all duration-150 ${
+              isActive
+                ? "bg-white text-neutral-900"
+                : "text-neutral-500 hover:text-neutral-300 hover:bg-white/[0.05]"
+            }`}
           >
-            <Badge
-              variant={isActive ? "default" : "secondary"}
-              className={`cursor-pointer text-[11px] px-2.5 py-0.5 transition-colors ${
-                isActive
-                  ? "bg-white text-neutral-900 hover:bg-neutral-200"
-                  : "bg-neutral-900 text-neutral-500 border-neutral-800 hover:text-neutral-300 hover:bg-neutral-800"
-              }`}
-            >
-              {config ? (
-                <span className="flex items-center gap-1.5">
-                  <span
-                    className={`inline-block w-1.5 h-1.5 rounded-full ${config.color}`}
-                  />
-                  {config.label}
-                </span>
-              ) : (
-                "All"
-              )}
-            </Badge>
+            {config && (
+              <span
+                className={`inline-block w-1.5 h-1.5 rounded-full ${
+                  isActive ? "bg-neutral-900" : config.color
+                }`}
+              />
+            )}
+            {config ? config.label : "All"}
           </button>
         );
       })}

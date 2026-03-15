@@ -8,20 +8,18 @@ import { StatsBar } from "@/components/stats-bar";
 import { SearchBar } from "@/components/search-bar";
 import { SourceFilter } from "@/components/source-filter";
 import { MemoryCard } from "@/components/memory-card";
-import { Brain, Zap, Activity } from "lucide-react";
+import { Brain, Zap, Activity, Sparkles } from "lucide-react";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<MemorySource | "all">("all");
 
-  // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 400);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Fetch timeline memories
   const { data: memories = [] } = useQuery<Memory[]>({
     queryKey: ["memories", sourceFilter],
     queryFn: async () => {
@@ -44,7 +42,6 @@ export default function Dashboard() {
     enabled: !debouncedQuery,
   });
 
-  // Semantic search
   const { data: searchResults = [], isFetching: isSearching } = useQuery<
     SearchResult[]
   >({
@@ -69,71 +66,89 @@ export default function Dashboard() {
   const isShowingSearch = !!debouncedQuery;
 
   return (
-    <div className="min-h-screen bg-neutral-950">
-      {/* Subtle grid background */}
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+    <div className="min-h-screen bg-[#09090b] selection:bg-white/10">
+      {/* Dot grid background */}
+      <div className="fixed inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
-      <div className="relative max-w-5xl mx-auto px-6 py-8">
+      {/* Subtle top glow */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-500/[0.03] rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="relative max-w-4xl mx-auto px-6 py-10">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <header className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 border border-neutral-800">
-              <Brain className="h-5 w-5 text-white" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.08]">
+              <Brain className="h-4 w-4 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight">Recall</h1>
-              <p className="text-[11px] text-neutral-500">
+              <h1 className="text-base font-semibold tracking-tight leading-none">
+                Recall
+              </h1>
+              <p className="text-[11px] text-neutral-600 mt-0.5">
                 Unified AI Memory
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20">
-              <Activity className="h-3 w-3 text-emerald-400" />
-              <span className="text-[11px] text-emerald-400 font-mono">
-                Capturing
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/[0.08] border border-emerald-500/[0.15]">
+              <div className="relative flex items-center justify-center">
+                <span className="absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              </div>
+              <span className="text-[11px] text-emerald-400 font-medium">
+                Live
               </span>
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Stats */}
-        <div className="mb-6">
+        <section className="mb-8">
           <StatsBar />
-        </div>
+        </section>
 
-        {/* Search + Filters */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              isSearching={isSearching}
-            />
-          </div>
-        </div>
+        {/* Search */}
+        <section className="mb-3">
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            isSearching={isSearching}
+          />
+        </section>
 
-        <div className="flex items-center justify-between mb-6">
+        {/* Filters + count */}
+        <section className="flex items-center justify-between mb-6">
           <SourceFilter active={sourceFilter} onChange={setSourceFilter} />
-          <span className="text-[11px] text-neutral-600 font-mono">
-            {displayData.length}{" "}
-            {isShowingSearch ? "results" : "memories"}
-          </span>
-        </div>
+          <div className="flex items-center gap-1.5 text-neutral-600">
+            {isShowingSearch && (
+              <Sparkles className="h-3 w-3 text-blue-400" />
+            )}
+            <span className="text-[11px] font-mono">
+              {displayData.length} {isShowingSearch ? "results" : "memories"}
+            </span>
+          </div>
+        </section>
 
         {/* Memory list */}
-        <div className="space-y-2">
+        <section className="space-y-1.5">
           {displayData.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-neutral-600">
-              <Zap className="h-8 w-8 mb-3" />
-              <p className="text-sm">
+            <div className="flex flex-col items-center justify-center py-24 text-neutral-600">
+              <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-4">
+                <Zap className="h-5 w-5" />
+              </div>
+              <p className="text-sm font-medium text-neutral-500 mb-1">
                 {isShowingSearch
-                  ? "No results found"
-                  : "No memories yet. Start the capture engine."}
+                  ? "No matching memories"
+                  : "No memories captured yet"}
+              </p>
+              <p className="text-[12px] text-neutral-600 mb-3">
+                {isShowingSearch
+                  ? "Try a different search query"
+                  : "Start the capture engine to begin recording context"}
               </p>
               {!isShowingSearch && (
-                <code className="mt-2 text-[11px] text-neutral-700 bg-neutral-900 px-2 py-1 rounded">
+                <code className="text-[11px] text-neutral-500 bg-white/[0.03] border border-white/[0.06] px-3 py-1.5 rounded-lg font-mono">
                   npm run dev:capture
                 </code>
               )}
@@ -152,7 +167,15 @@ export default function Dashboard() {
               />
             ))
           )}
-        </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="mt-12 pt-6 border-t border-white/[0.04] flex items-center justify-between text-[10px] text-neutral-700">
+          <span>Recall v0.1.0 — GenAI Genesis 2026</span>
+          <span className="flex items-center gap-1">
+            Powered by Moorcheh AI + Supabase pgvector
+          </span>
+        </footer>
       </div>
     </div>
   );

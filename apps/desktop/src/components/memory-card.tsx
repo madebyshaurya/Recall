@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SOURCE_CONFIG, type Memory } from "@/lib/types";
 import {
@@ -11,8 +10,10 @@ import {
   MousePointer,
   Terminal,
   ExternalLink,
+  Clock,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const ICONS = {
   Monitor,
@@ -45,75 +46,103 @@ export function MemoryCard({
   similarity?: number;
   index?: number;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const config = SOURCE_CONFIG[memory.source];
   const Icon = ICONS[config.icon as keyof typeof ICONS] || Terminal;
   const metadata = memory.metadata || {};
+  const isLong = memory.content.length > 200;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.03, duration: 0.2 }}
+      transition={{ delay: index * 0.02, duration: 0.15 }}
     >
-      <Card className="relative overflow-hidden border-neutral-800 bg-neutral-900/50 hover:bg-neutral-900/80 transition-colors group">
-        {/* Source color indicator */}
+      <div
+        onClick={() => isLong && setExpanded(!expanded)}
+        className={`group relative rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-200 ${isLong ? "cursor-pointer" : ""}`}
+      >
+        {/* Source color accent */}
         <div
-          className={`absolute left-0 top-0 bottom-0 w-1 ${config.color}`}
+          className={`absolute left-0 top-3 bottom-3 w-0.5 rounded-full ${config.color} opacity-60`}
         />
 
-        <div className="p-4 pl-5">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Icon className="h-3.5 w-3.5 text-neutral-400" />
-              <Badge
-                variant="secondary"
-                className="text-[10px] px-1.5 py-0 h-4 bg-neutral-800 text-neutral-400 font-mono"
-              >
-                {config.label}
-              </Badge>
-              {metadata.app_name && (
-                <span className="text-[10px] text-neutral-500 font-mono">
+        <div className="px-4 py-3 pl-5">
+          {/* Header row */}
+          <div className="flex items-center gap-2 mb-1.5">
+            <div
+              className={`flex items-center justify-center w-5 h-5 rounded-md ${config.color}/10`}
+            >
+              <Icon className="h-3 w-3 text-neutral-400" />
+            </div>
+            <span className="text-[11px] font-medium text-neutral-400">
+              {config.label}
+            </span>
+            {metadata.app_name && (
+              <>
+                <span className="text-neutral-700">·</span>
+                <span className="text-[11px] text-neutral-500">
                   {metadata.app_name as string}
                 </span>
+              </>
+            )}
+            {metadata.window_title &&
+              (metadata.window_title as string).length > 0 && (
+                <>
+                  <span className="text-neutral-700">·</span>
+                  <span className="text-[11px] text-neutral-600 truncate max-w-[250px]">
+                    {metadata.window_title as string}
+                  </span>
+                </>
               )}
-              {metadata.window_title && (
-                <span className="text-[10px] text-neutral-600 font-mono truncate max-w-[200px]">
-                  — {metadata.window_title as string}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
+
+            <div className="ml-auto flex items-center gap-2 shrink-0">
               {similarity !== undefined && (
-                <span className="text-[10px] font-mono text-neutral-500">
-                  {(similarity * 100).toFixed(0)}%
-                </span>
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0 h-4 bg-blue-500/10 text-blue-400 border-blue-500/20 font-mono"
+                >
+                  {(similarity * 100).toFixed(0)}% match
+                </Badge>
               )}
-              <span className="text-[10px] text-neutral-500 font-mono">
-                {timeAgo(memory.captured_at)}
-              </span>
+              <div className="flex items-center gap-1 text-neutral-600">
+                <Clock className="h-2.5 w-2.5" />
+                <span className="text-[10px] font-mono">
+                  {timeAgo(memory.captured_at)}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Content */}
-          <p className="text-sm text-neutral-300 leading-relaxed line-clamp-3">
+          <p
+            className={`text-[13px] text-neutral-300 leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
+          >
             {memory.content}
           </p>
 
-          {/* Footer */}
+          {/* Expand hint */}
+          {isLong && !expanded && (
+            <span className="text-[10px] text-neutral-600 mt-1 inline-block">
+              Click to expand
+            </span>
+          )}
+
+          {/* Source URL */}
           {memory.source_url && (
             <a
               href={memory.source_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-2 text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 mt-1.5 text-[10px] text-neutral-500 hover:text-blue-400 transition-colors"
             >
               <ExternalLink className="h-2.5 w-2.5" />
-              Open source
+              View source
             </a>
           )}
         </div>
-      </Card>
+      </div>
     </motion.div>
   );
 }
