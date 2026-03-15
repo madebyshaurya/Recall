@@ -14,6 +14,9 @@ import {
 import { MemoryCard } from "@/components/memory-card";
 import { Connections } from "@/components/connections";
 import { Settings } from "@/components/settings";
+import { VectorGlobe } from "@/components/vector-globe";
+import { ActivityChart } from "@/components/activity-chart";
+import { SourceRings } from "@/components/source-rings";
 import { Zap, Sparkles, Link2, SlidersHorizontal } from "lucide-react";
 import Image from "next/image";
 
@@ -149,6 +152,27 @@ export default function Dashboard() {
         {/* Stats */}
         <section className="mb-8">
           <StatsBar />
+        </section>
+
+        {/* Visualizations */}
+        <section className="grid grid-cols-5 gap-3 mb-8">
+          {/* Vector Globe — 3 cols */}
+          <div className="col-span-3 rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+            <VectorGlobe />
+          </div>
+          {/* Source Rings — 2 cols */}
+          <div className="col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 flex items-center justify-center">
+            <SourceRings />
+          </div>
+        </section>
+
+        {/* Activity Chart */}
+        <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-medium">Capture Activity</span>
+            <span className="text-[9px] text-neutral-700 font-mono">Per hour by source</span>
+          </div>
+          <ActivityChart />
         </section>
 
         {/* Tabs */}
