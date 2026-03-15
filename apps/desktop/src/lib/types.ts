@@ -1,4 +1,4 @@
-export type MemorySource = "screen" | "slack" | "notion" | "claude_code" | "cursor" | "mcp_log";
+export type MemorySource = "screen" | "slack" | "notion" | "claude_code" | "cursor" | "mcp_log" | "docs";
 
 export interface Memory {
   id: string;
@@ -25,4 +25,5 @@ export const SOURCE_CONFIG: Record<
   claude_code: { label: "Claude Code", color: "bg-orange-500", icon: "Bot" },
   cursor: { label: "Cursor", color: "bg-yellow-500", icon: "MousePointer" },
   mcp_log: { label: "MCP Log", color: "bg-gray-500", icon: "Terminal" },
+  docs: { label: "Docs", color: "bg-teal-500", icon: "BookOpen" },
 };
