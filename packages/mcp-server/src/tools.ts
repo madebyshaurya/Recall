@@ -95,6 +95,22 @@ export const TOOLS = [
       required: ['content'],
     },
   },
+  {
+    name: 'sync_source',
+    description:
+      'Trigger a sync/refresh of a connected data source (Slack or Notion) to fetch the latest data into the unified memory. Use this when the user wants fresh data from their integrations.',
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        source: {
+          type: 'string',
+          enum: ['slack', 'notion'],
+          description: 'The source to sync',
+        },
+      },
+      required: ['source'],
+    },
+  },
 ];
 
 // Tool handlers
@@ -175,6 +191,24 @@ export async function handleToolCall(
       }
 
       return `Memory saved successfully (id: ${memory.id}).`;
+    }
+
+    case 'sync_source': {
+      const source = args.source as string;
+      try {
+        // Call the Next.js sync API
+        const dashboardUrl = process.env.DASHBOARD_URL || 'http://localhost:3000';
+        const res = await fetch(`${dashboardUrl}/api/sync/${source}`, {
+          method: 'POST',
+        });
+        const data = await res.json();
+        if (data.error) {
+          return `Sync failed: ${data.error}`;
+        }
+        return `Successfully synced ${data.count || 0} items from ${source}.`;
+      } catch (err) {
+        return `Sync failed: ${err instanceof Error ? err.message : 'connection error'}. Make sure the dashboard is running (npm run dev:dashboard).`;
+      }
     }
 
     default:

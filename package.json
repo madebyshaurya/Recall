@@ -7,8 +7,7 @@
   "scripts": {
     "dev:capture": "tsx packages/capture-engine/src/index.ts",
     "dev:mcp": "tsx packages/mcp-server/src/index.ts",
-    "dev:desktop": "cd apps/desktop && npm run tauri dev",
-    "dev:moorcheh": "cd packages/moorcheh-bridge && uvicorn main:app --port 8100 --reload",
+    "dev:dashboard": "cd apps/desktop && npm run dev",
     "test:supabase": "tsx scripts/test-supabase.ts",
     "test:openai": "tsx scripts/test-openai.ts",
     "setup": "tsx packages/mcp-server/src/setup.ts",

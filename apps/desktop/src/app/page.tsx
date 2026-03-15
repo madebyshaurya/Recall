@@ -12,9 +12,11 @@ import {
   type FilterValue,
 } from "@/components/source-filter";
 import { MemoryCard } from "@/components/memory-card";
-import { Brain, Zap, Sparkles } from "lucide-react";
+import { Connections } from "@/components/connections";
+import { Brain, Zap, Sparkles, Link2 } from "lucide-react";
 
 export default function Dashboard() {
+  const [tab, setTab] = useState<"memories" | "connections">("memories");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<FilterValue>("all");
@@ -122,6 +124,36 @@ export default function Dashboard() {
           <StatsBar />
         </section>
 
+        {/* Tabs */}
+        <div className="flex items-center gap-1 mb-6">
+          <button
+            onClick={() => setTab("memories")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
+              tab === "memories"
+                ? "bg-white/[0.08] text-white"
+                : "text-neutral-500 hover:text-neutral-300"
+            }`}
+          >
+            <Brain className="h-3.5 w-3.5" />
+            Memories
+          </button>
+          <button
+            onClick={() => setTab("connections")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
+              tab === "connections"
+                ? "bg-white/[0.08] text-white"
+                : "text-neutral-500 hover:text-neutral-300"
+            }`}
+          >
+            <Link2 className="h-3.5 w-3.5" />
+            Connections
+          </button>
+        </div>
+
+        {tab === "connections" ? (
+          <Connections />
+        ) : (
+        <>
         {/* Search */}
         <section className="mb-3">
           <SearchBar
@@ -182,6 +214,9 @@ export default function Dashboard() {
             ))
           )}
         </section>
+
+        </>
+        )}
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-white/[0.04] flex items-center justify-between text-[10px] text-neutral-700">
