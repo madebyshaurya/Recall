@@ -13,12 +13,13 @@ import {
 } from "@/components/source-filter";
 import { MemoryCard } from "@/components/memory-card";
 import { Connections } from "@/components/connections";
-import { Zap, Sparkles, Link2 } from "lucide-react";
+import { Settings } from "@/components/settings";
+import { Zap, Sparkles, Link2, SlidersHorizontal } from "lucide-react";
 import Image from "next/image";
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
-  const [tab, setTab] = useState<"memories" | "connections">("memories");
+  const [tab, setTab] = useState<"memories" | "connections" | "settings">("memories");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<FilterValue>("all");
@@ -174,10 +175,23 @@ export default function Dashboard() {
             <Link2 className="h-3.5 w-3.5" />
             Connections
           </button>
+          <button
+            onClick={() => setTab("settings")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all ${
+              tab === "settings"
+                ? "bg-white/[0.08] text-white"
+                : "text-neutral-500 hover:text-neutral-300"
+            }`}
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+            Settings
+          </button>
         </div>
 
         {tab === "connections" ? (
           <Connections />
+        ) : tab === "settings" ? (
+          <Settings />
         ) : (
         <>
         {/* Search */}
