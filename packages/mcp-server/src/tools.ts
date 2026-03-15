@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { searchMemories, getRecentMemories, saveMemory } from './search.js';
+import { ingestDocUrls, ingestFromDependencies } from './docs-ingest.js';
 import type { MemorySource } from '../../../packages/shared/src/types.js';
+
+const SOURCE_ENUM = ['screen', 'slack', 'notion', 'claude_code', 'cursor', 'mcp_log', 'docs'];
 
 // Tool definitions for MCP
 export const TOOLS = [
@@ -17,7 +20,7 @@ export const TOOLS = [
         },
         source: {
           type: 'string',
-          enum: ['screen', 'slack', 'notion', 'claude_code', 'cursor', 'mcp_log'],
+          enum: SOURCE_ENUM,
           description: 'Optional: filter by source type',
         },
         limit: {
@@ -46,7 +49,7 @@ export const TOOLS = [
         },
         source: {
           type: 'string',
-          enum: ['screen', 'slack', 'notion', 'claude_code', 'cursor', 'mcp_log'],
+          enum: SOURCE_ENUM,
           description: 'Optional: filter by source type',
         },
       },
@@ -61,7 +64,7 @@ export const TOOLS = [
       properties: {
         source: {
           type: 'string',
-          enum: ['screen', 'slack', 'notion', 'claude_code', 'cursor'],
+          enum: SOURCE_ENUM,
           description: 'The source to search within',
         },
         query: {
@@ -109,6 +112,39 @@ export const TOOLS = [
         },
       },
       required: ['source'],
+    },
+  },
+  {
+    name: 'ingest_docs',
+    description:
+      'Fetch, parse, chunk, and store documentation into memory. Supports web pages, PDFs, and GitHub markdown files. Use the `dependencies` param to auto-ingest docs for project dependencies (e.g. pass package names from package.json). Already-ingested docs are skipped automatically.',
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        urls: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'URLs to ingest (web pages, PDFs, or GitHub markdown files)',
+        },
+        dependencies: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Package names to look up in the docs registry (e.g. ["next", "react", "tailwindcss"]). Docs for recognized packages are auto-fetched.',
+        },
+        source_type: {
+          type: 'string',
+          enum: ['web', 'pdf', 'github'],
+          description: 'Optional: type of source. Auto-detected from URL if omitted.',
+        },
+        topic: {
+          type: 'string',
+          description: 'Optional: topic label for filtering (e.g. "Next.js", "React")',
+        },
+        chunk_size: {
+          type: 'number',
+          description: 'Target tokens per chunk (default 500)',
+        },
+      },
     },
   },
 ];
@@ -209,6 +245,54 @@ export async function handleToolCall(
       } catch (err) {
         return `Sync failed: ${err instanceof Error ? err.message : 'connection error'}. Make sure the dashboard is running (npm run dev:dashboard).`;
       }
+    }
+
+    case 'ingest_docs': {
+      const urls = args.urls as string[] | undefined;
+      const dependencies = args.dependencies as string[] | undefined;
+      const sourceType = args.source_type as 'web' | 'pdf' | 'github' | undefined;
+      const topic = args.topic as string | undefined;
+      const chunkSize = args.chunk_size as number | undefined;
+
+      if (!urls && !dependencies) {
+        return 'Please provide either `urls` or `dependencies` to ingest.';
+      }
+
+      const parts: string[] = [];
+
+      // Handle dependency-based ingestion
+      if (dependencies && dependencies.length > 0) {
+        const depsResult = await ingestFromDependencies(dependencies, { sourceType, topic, chunkSize });
+        if (depsResult.resolved.length > 0) {
+          parts.push(`Dependencies: found docs for ${depsResult.resolved.join(', ')}.`);
+        }
+        if (depsResult.ingested > 0) {
+          parts.push(`Ingested ${depsResult.ingested} page(s) into ${depsResult.chunks} chunks.`);
+        }
+        if (depsResult.skipped > 0) {
+          parts.push(`Skipped ${depsResult.skipped} already-ingested URL(s).`);
+        }
+        if (depsResult.errors.length > 0) {
+          parts.push(`Errors:\n${depsResult.errors.join('\n')}`);
+        }
+        const unrecognized = dependencies.filter(
+          (d) => !depsResult.resolved.some((r) => r.toLowerCase().includes(d.toLowerCase()) || d.includes(r.toLowerCase()))
+        );
+        if (unrecognized.length > 0 && depsResult.resolved.length < dependencies.length) {
+          parts.push(`No docs registered for: ${unrecognized.join(', ')}`);
+        }
+      }
+
+      // Handle direct URL ingestion
+      if (urls && urls.length > 0) {
+        const urlResult = await ingestDocUrls(urls, { sourceType, topic, chunkSize });
+        parts.push(`URLs: ingested ${urlResult.ingested} page(s) into ${urlResult.chunks} chunks.`);
+        if (urlResult.errors.length > 0) {
+          parts.push(`Errors:\n${urlResult.errors.join('\n')}`);
+        }
+      }
+
+      return parts.join('\n');
     }
 
     default:

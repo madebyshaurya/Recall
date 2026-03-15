@@ -1,4 +1,4 @@
-export type MemorySource = 'screen' | 'slack' | 'notion' | 'claude_code' | 'cursor' | 'mcp_log';
+export type MemorySource = 'screen' | 'slack' | 'notion' | 'claude_code' | 'cursor' | 'mcp_log' | 'docs';
 
 export interface Memory {
   id: string;

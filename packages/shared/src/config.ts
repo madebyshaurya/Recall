@@ -31,4 +31,10 @@ export const config = {
   screenpipe: {
     apiUrl: process.env.SCREENPIPE_API_URL || 'http://localhost:3030',
   },
+  firecrawl: {
+    apiKey: process.env.FIRECRAWL_API_KEY || '',
+  },
+  github: {
+    token: process.env.GITHUB_TOKEN || '',
+  },
 } as const;
