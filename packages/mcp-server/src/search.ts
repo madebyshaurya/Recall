@@ -1,5 +1,6 @@
 import { supabase } from '../../../packages/shared/src/supabase.js';
 import { embedText } from '../../../packages/shared/src/embeddings.js';
+import { searchMoorcheh, storeMoorcheh } from '../../../packages/shared/src/moorcheh.js';
 import type { SearchResult, Memory, MemorySource } from '../../../packages/shared/src/types.js';
 
 interface SearchOptions {
@@ -105,6 +106,9 @@ export async function saveMemory(
     console.error('Save memory error:', error.message);
     return null;
   }
+
+  // Also save to Moorcheh (fire-and-forget)
+  storeMoorcheh(content, 'mcp_log', metadata).catch(() => {});
 
   return data as Memory;
 }

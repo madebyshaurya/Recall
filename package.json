@@ -17,6 +17,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
     "@supabase/supabase-js": "^2.49.4",
+    "chokidar": "^5.0.0",
     "dotenv": "^16.4.7",
     "openai": "^4.82.0",
     "zod": "^3.24.0"
@@ -25,6 +26,13 @@
     "tsx": "^4.19.0",
     "typescript": "^5.7.3"
   },
-  "keywords": ["ai", "memory", "mcp", "semantic-search", "screen-capture", "unified-memory"],
+  "keywords": [
+    "ai",
+    "memory",
+    "mcp",
+    "semantic-search",
+    "screen-capture",
+    "unified-memory"
+  ],
   "license": "MIT"
 }

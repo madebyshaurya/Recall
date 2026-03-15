@@ -2,6 +2,8 @@ import '../../../packages/shared/src/config.js'; // Load env
 import { isScreenpipeRunning, getLatestCaptures } from './screenpipe.js';
 import { captureScreen, getActiveWindow } from './fallback-capture.js';
 import { processCapture } from './pipeline.js';
+import { initMoorchehNamespaces } from '../../../packages/shared/src/moorcheh.js';
+import { startAgentWatcher } from './agent-watcher.js';
 
 const WINDOW_POLL_INTERVAL = 2000;    // Check window title every 2s
 const FALLBACK_CAPTURE_INTERVAL = 60000; // Force capture every 60s
@@ -77,9 +79,17 @@ async function main() {
     console.log('⚠ Screenpipe not detected — using fallback (screencapture + gpt-4.1-nano vision)');
   }
 
+  // Initialize Moorcheh namespaces
+  await initMoorchehNamespaces().catch((err) => {
+    console.log('⚠ Moorcheh init failed (non-blocking):', err instanceof Error ? err.message : err);
+  });
+
   console.log(`  Window poll: every ${WINDOW_POLL_INTERVAL / 1000}s`);
   console.log(`  Fallback capture: every ${FALLBACK_CAPTURE_INTERVAL / 1000}s`);
   console.log(`  Idle timeout: ${IDLE_TIMEOUT / 1000}s`);
+  // Start AI agent session watcher
+  startAgentWatcher();
+
   console.log('\nCapturing...\n');
 
   // Initial capture

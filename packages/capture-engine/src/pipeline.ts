@@ -1,6 +1,7 @@
 import { describeScreenshot } from '../../../packages/shared/src/vision.js';
 import { embedText } from '../../../packages/shared/src/embeddings.js';
 import { supabase } from '../../../packages/shared/src/supabase.js';
+import { storeMoorcheh } from '../../../packages/shared/src/moorcheh.js';
 import { isDuplicate } from './dedup.js';
 import type { Memory, MemorySource } from '../../../packages/shared/src/types.js';
 
@@ -57,6 +58,11 @@ export async function processCapture(input: CaptureInput): Promise<Memory | null
       console.error('  [error] Supabase insert failed:', error.message);
       return null;
     }
+
+    // Step 5: Dual-write to Moorcheh (fire-and-forget)
+    storeMoorcheh(content, input.source, input.metadata).catch((err) => {
+      console.error('  [moorcheh] Write failed (non-blocking):', err instanceof Error ? err.message : err);
+    });
 
     return data as Memory;
   } catch (err) {
