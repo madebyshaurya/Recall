@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { SOURCE_CONFIG, type Memory } from "@/lib/types";
 import {
   Monitor,
@@ -10,9 +9,9 @@ import {
   MousePointer,
   Terminal,
   ExternalLink,
-  Clock,
+  ChevronDown,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 const ICONS = {
@@ -28,13 +27,18 @@ function timeAgo(date: string): string {
   const seconds = Math.floor(
     (Date.now() - new Date(date).getTime()) / 1000
   );
-  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 60) return `${seconds}s`;
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return `${minutes}m`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `${hours}h`;
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return `${days}d`;
+}
+
+function truncate(str: string, len: number): string {
+  if (str.length <= len) return str;
+  return str.substring(0, len).trimEnd() + "...";
 }
 
 export function MemoryCard({
@@ -50,99 +54,119 @@ export function MemoryCard({
   const config = SOURCE_CONFIG[memory.source];
   const Icon = ICONS[config.icon as keyof typeof ICONS] || Terminal;
   const metadata = memory.metadata || {};
-  const isLong = memory.content.length > 200;
+  const isLong = memory.content.length > 120;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.02, duration: 0.15 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.015, duration: 0.12 }}
     >
-      <div
-        onClick={() => isLong && setExpanded(!expanded)}
-        className={`group relative rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-200 ${isLong ? "cursor-pointer" : ""}`}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full text-left group relative rounded-lg border border-white/[0.04] hover:border-white/[0.08] bg-white/[0.015] hover:bg-white/[0.03] transition-all duration-150"
       >
-        {/* Source color accent */}
-        <div
-          className={`absolute left-0 top-3 bottom-3 w-0.5 rounded-full ${config.color} opacity-60`}
-        />
+        {/* Compact row */}
+        <div className="flex items-center gap-2.5 px-3 py-2">
+          {/* Source dot */}
+          <div
+            className={`w-1.5 h-1.5 rounded-full shrink-0 ${config.color}`}
+          />
 
-        <div className="px-4 py-3 pl-5">
-          {/* Header row */}
-          <div className="flex items-center gap-2 mb-1.5">
-            <div
-              className={`flex items-center justify-center w-5 h-5 rounded-md ${config.color}/10`}
-            >
-              <Icon className="h-3 w-3 text-neutral-400" />
-            </div>
-            <span className="text-[11px] font-medium text-neutral-400">
-              {config.label}
-            </span>
-            {metadata.app_name && (
-              <>
-                <span className="text-neutral-700">·</span>
-                <span className="text-[11px] text-neutral-500">
-                  {metadata.app_name as string}
-                </span>
-              </>
+          {/* Icon */}
+          <Icon className="h-3.5 w-3.5 text-neutral-500 shrink-0" />
+
+          {/* Content preview */}
+          <span className="text-[12px] text-neutral-300 truncate flex-1 min-w-0">
+            {expanded ? memory.content : truncate(memory.content, 120)}
+          </span>
+
+          {/* Meta */}
+          <div className="flex items-center gap-2 shrink-0 ml-2">
+            {similarity !== undefined && (
+              <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded">
+                {(similarity * 100).toFixed(0)}%
+              </span>
             )}
-            {metadata.window_title &&
-              (metadata.window_title as string).length > 0 && (
-                <>
-                  <span className="text-neutral-700">·</span>
-                  <span className="text-[11px] text-neutral-600 truncate max-w-[250px]">
-                    {metadata.window_title as string}
-                  </span>
-                </>
-              )}
 
-            <div className="ml-auto flex items-center gap-2 shrink-0">
-              {similarity !== undefined && (
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] px-1.5 py-0 h-4 bg-blue-500/10 text-blue-400 border-blue-500/20 font-mono"
-                >
-                  {(similarity * 100).toFixed(0)}% match
-                </Badge>
-              )}
-              <div className="flex items-center gap-1 text-neutral-600">
-                <Clock className="h-2.5 w-2.5" />
-                <span className="text-[10px] font-mono">
-                  {timeAgo(memory.captured_at)}
-                </span>
-              </div>
-            </div>
-          </div>
+            {metadata.app_name && (
+              <span className="text-[10px] text-neutral-600 font-mono hidden sm:inline">
+                {metadata.app_name as string}
+              </span>
+            )}
 
-          {/* Content */}
-          <p
-            className={`text-[13px] text-neutral-300 leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
-          >
-            {memory.content}
-          </p>
-
-          {/* Expand hint */}
-          {isLong && !expanded && (
-            <span className="text-[10px] text-neutral-600 mt-1 inline-block">
-              Click to expand
+            <span className="text-[10px] text-neutral-600 font-mono w-6 text-right">
+              {timeAgo(memory.captured_at)}
             </span>
-          )}
 
-          {/* Source URL */}
-          {memory.source_url && (
-            <a
-              href={memory.source_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 mt-1.5 text-[10px] text-neutral-500 hover:text-blue-400 transition-colors"
-            >
-              <ExternalLink className="h-2.5 w-2.5" />
-              View source
-            </a>
-          )}
+            <ChevronDown
+              className={`h-3 w-3 text-neutral-700 transition-transform duration-150 ${
+                expanded ? "rotate-180" : ""
+              }`}
+            />
+          </div>
         </div>
-      </div>
+
+        {/* Expanded content */}
+        <AnimatePresence>
+          {expanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="overflow-hidden"
+            >
+              <div className="px-3 pb-3 pt-0">
+                <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-3">
+                  <p className="text-[12px] text-neutral-300 leading-relaxed whitespace-pre-wrap">
+                    {memory.content}
+                  </p>
+
+                  {/* Metadata row */}
+                  <div className="flex items-center gap-3 mt-3 pt-2 border-t border-white/[0.04]">
+                    <span className="text-[10px] text-neutral-600">
+                      <span className="text-neutral-500">{config.label}</span>
+                    </span>
+                    {metadata.app_name && (
+                      <span className="text-[10px] text-neutral-600">
+                        App:{" "}
+                        <span className="text-neutral-500">
+                          {metadata.app_name as string}
+                        </span>
+                      </span>
+                    )}
+                    {metadata.window_title &&
+                      (metadata.window_title as string).length > 0 && (
+                        <span className="text-[10px] text-neutral-600 truncate max-w-[300px]">
+                          Window:{" "}
+                          <span className="text-neutral-500">
+                            {metadata.window_title as string}
+                          </span>
+                        </span>
+                      )}
+                    <span className="text-[10px] text-neutral-600">
+                      {new Date(memory.captured_at).toLocaleString()}
+                    </span>
+                    {memory.source_url && (
+                      <a
+                        href={memory.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-[10px] text-neutral-500 hover:text-blue-400 transition-colors ml-auto"
+                      >
+                        <ExternalLink className="h-2.5 w-2.5" />
+                        Source
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </button>
     </motion.div>
   );
 }

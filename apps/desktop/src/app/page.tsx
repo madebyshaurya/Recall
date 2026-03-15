@@ -3,26 +3,32 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import type { Memory, MemorySource, SearchResult } from "@/lib/types";
+import type { Memory, SearchResult } from "@/lib/types";
 import { StatsBar } from "@/components/stats-bar";
 import { SearchBar } from "@/components/search-bar";
-import { SourceFilter } from "@/components/source-filter";
+import {
+  SourceFilter,
+  getSourcesForFilter,
+  type FilterValue,
+} from "@/components/source-filter";
 import { MemoryCard } from "@/components/memory-card";
-import { Brain, Zap, Activity, Sparkles } from "lucide-react";
+import { Brain, Zap, Sparkles } from "lucide-react";
 
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
-  const [sourceFilter, setSourceFilter] = useState<MemorySource | "all">("all");
+  const [sourceFilter, setSourceFilter] = useState<FilterValue>("all");
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 400);
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Fetch timeline memories
   const { data: memories = [] } = useQuery<Memory[]>({
     queryKey: ["memories", sourceFilter],
     queryFn: async () => {
+      const sources = getSourcesForFilter(sourceFilter);
       let query = supabase
         .from("memories")
         .select(
@@ -30,10 +36,10 @@ export default function Dashboard() {
         )
         .eq("is_duplicate", false)
         .order("captured_at", { ascending: false })
-        .limit(50);
+        .limit(100);
 
-      if (sourceFilter !== "all") {
-        query = query.eq("source", sourceFilter);
+      if (sources) {
+        query = query.in("source", sources);
       }
 
       const { data } = await query;
@@ -42,21 +48,29 @@ export default function Dashboard() {
     enabled: !debouncedQuery,
   });
 
+  // Semantic search
   const { data: searchResults = [], isFetching: isSearching } = useQuery<
     SearchResult[]
   >({
     queryKey: ["search", debouncedQuery, sourceFilter],
     queryFn: async () => {
+      const sources = getSourcesForFilter(sourceFilter);
       const res = await fetch("/api/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: debouncedQuery,
-          source: sourceFilter === "all" ? null : sourceFilter,
+          source: sources ? sources[0] : null, // RPC only supports single source filter
           limit: 20,
         }),
       });
       const { results } = await res.json();
+      // If we have multiple source filters, filter client-side
+      if (sources && sources.length > 1) {
+        return (results || []).filter((r: SearchResult) =>
+          sources.includes(r.source)
+        );
+      }
       return results || [];
     },
     enabled: !!debouncedQuery && debouncedQuery.length >= 2,
@@ -118,7 +132,7 @@ export default function Dashboard() {
         </section>
 
         {/* Filters + count */}
-        <section className="flex items-center justify-between mb-6">
+        <section className="flex items-center justify-between mb-5">
           <SourceFilter active={sourceFilter} onChange={setSourceFilter} />
           <div className="flex items-center gap-1.5 text-neutral-600">
             {isShowingSearch && (
@@ -131,7 +145,7 @@ export default function Dashboard() {
         </section>
 
         {/* Memory list */}
-        <section className="space-y-1.5">
+        <section className="space-y-0.5">
           {displayData.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-neutral-600">
               <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-4">
@@ -172,9 +186,7 @@ export default function Dashboard() {
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-white/[0.04] flex items-center justify-between text-[10px] text-neutral-700">
           <span>Recall v0.1.0 — GenAI Genesis 2026</span>
-          <span className="flex items-center gap-1">
-            Powered by Moorcheh AI + Supabase pgvector
-          </span>
+          <span>Powered by Moorcheh AI + Supabase pgvector</span>
         </footer>
       </div>
     </div>
