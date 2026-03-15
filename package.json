@@ -12,7 +12,8 @@
     "test:openai": "tsx scripts/test-openai.ts",
     "setup": "tsx packages/mcp-server/src/setup.ts",
     "seed:demo": "tsx scripts/seed-demo-data.ts",
-    "clear": "tsx scripts/clear-data.ts"
+    "clear": "tsx scripts/clear-data.ts",
+    "demo": "tsx scripts/demo-reset.ts && cd apps/desktop && npm run dev"
   },
   "dependencies": {
     "@mendable/firecrawl-js": "^4.16.0",
