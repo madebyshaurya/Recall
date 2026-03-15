@@ -1,6 +1,16 @@
-# Recall — The Unified AI Memory
+<p align="center">
+  <img src="assets/logo.png" alt="Recall Logo" width="120" />
+</p>
 
-> Your AI agents are smart, but they're blind to your full context. Recall gives them the memory they deserve.
+<h1 align="center">Recall — The Unified AI Memory</h1>
+
+<p align="center">
+  <em>Your AI agents are smart, but they're blind to your full context. Recall gives them the memory they deserve.</em>
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick Start</a> · <a href="#features">Features</a> · <a href="#mcp-tools">MCP Tools</a> · <a href="#demo">Demo</a> · <a href="#tech-stack">Tech Stack</a>
+</p>
 
 Recall is an intelligent desktop companion that creates a **unified, semantic memory layer** across your screen activity, Slack, Notion, and AI agent sessions (Claude Code, Cursor, etc.). It exposes this memory via a **Model Context Protocol (MCP) server**, making any AI agent context-aware across your entire digital workspace.
 

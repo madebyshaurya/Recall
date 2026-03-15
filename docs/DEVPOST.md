@@ -1,7 +1,14 @@
+<p align="center">
+  <img src="../assets/logo.png" alt="Recall Logo" width="100" />
+</p>
+
 # Devpost Submission — Recall
 
 ## Project Name
 Recall
+
+## Logo
+Use `assets/logo.png` for Devpost project image and gallery.
 
 ## Elevator Pitch
 An intelligent desktop companion that gives your AI agents unified memory across your screen, Slack, Notion, and past AI sessions — so they finally understand your full context.

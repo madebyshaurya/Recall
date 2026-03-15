@@ -13,7 +13,8 @@ import {
 } from "@/components/source-filter";
 import { MemoryCard } from "@/components/memory-card";
 import { Connections } from "@/components/connections";
-import { Brain, Zap, Sparkles, Link2 } from "lucide-react";
+import { Zap, Sparkles, Link2 } from "lucide-react";
+import Image from "next/image";
 
 export default function Dashboard() {
   const queryClient = useQueryClient();
@@ -114,9 +115,13 @@ export default function Dashboard() {
         {/* Header */}
         <header className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.08]">
-              <Brain className="h-4 w-4 text-white" />
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Recall"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
             <div>
               <h1 className="text-base font-semibold tracking-tight leading-none">
                 Recall
@@ -155,7 +160,7 @@ export default function Dashboard() {
                 : "text-neutral-500 hover:text-neutral-300"
             }`}
           >
-            <Brain className="h-3.5 w-3.5" />
+            <Sparkles className="h-3.5 w-3.5" />
             Memories
           </button>
           <button
