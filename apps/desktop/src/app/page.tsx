@@ -19,7 +19,10 @@ import { ActivityChart } from "@/components/activity-chart";
 import { SourceRings } from "@/components/source-rings";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { getTheme } from "@/lib/themes";
-import { Zap, Sparkles, Link2, SlidersHorizontal } from "lucide-react";
+import { MemoryGraph } from "@/components/memory-graph";
+import { MemoryDetailModal } from "@/components/memory-detail-modal";
+import { AddMemoryModal } from "@/components/add-memory-modal";
+import { Zap, Sparkles, Link2, SlidersHorizontal, Plus, Globe, GitFork } from "lucide-react";
 import Image from "next/image";
 
 export default function Dashboard() {
@@ -30,6 +33,9 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<FilterValue>("all");
+  const [vizMode, setVizMode] = useState<"globe" | "graph">("globe");
+  const [detailMemory, setDetailMemory] = useState<Memory | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 400);
@@ -183,14 +189,40 @@ export default function Dashboard() {
         </section>
 
         {/* Visualizations */}
-        <section className="grid grid-cols-5 gap-3 mb-8">
-          {/* Vector Globe — 3 cols */}
-          <div className="col-span-3 rounded-xl themed-border overflow-hidden">
-            <VectorGlobe />
+        <section className="mb-8">
+          <div className="flex items-center gap-1 mb-3">
+            <button
+              onClick={() => setVizMode("globe")}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                vizMode === "globe"
+                  ? "bg-white/[0.08] themed-text"
+                  : "themed-text-muted hover:themed-text-secondary"
+              }`}
+            >
+              <Globe className="h-3 w-3" />
+              Vector Globe
+            </button>
+            <button
+              onClick={() => setVizMode("graph")}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                vizMode === "graph"
+                  ? "bg-white/[0.08] themed-text"
+                  : "themed-text-muted hover:themed-text-secondary"
+              }`}
+            >
+              <GitFork className="h-3 w-3" />
+              Memory Graph
+            </button>
           </div>
-          {/* Source Rings — 2 cols */}
-          <div className="col-span-2 rounded-xl themed-border p-4 flex items-center justify-center">
-            <SourceRings />
+          <div className="grid grid-cols-5 gap-3">
+            {/* Main viz — 3 cols */}
+            <div className="col-span-3 rounded-xl themed-border overflow-hidden">
+              {vizMode === "globe" ? <VectorGlobe /> : <MemoryGraph />}
+            </div>
+            {/* Source Rings — 2 cols */}
+            <div className="col-span-2 rounded-xl themed-border p-4 flex items-center justify-center">
+              <SourceRings />
+            </div>
           </div>
         </section>
 
@@ -302,6 +334,7 @@ export default function Dashboard() {
                     : undefined
                 }
                 index={i}
+                onOpenDetail={setDetailMemory}
               />
             ))
           )}
@@ -316,6 +349,29 @@ export default function Dashboard() {
           <span>Powered by Moorcheh AI + Supabase pgvector</span>
         </footer>
       </div>
+
+      {/* Floating add button */}
+      <button
+        onClick={() => setShowAddModal(true)}
+        className="fixed bottom-8 right-8 z-40 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 active:scale-95"
+        style={{ background: "var(--theme-accent)" }}
+        title="Add memory"
+      >
+        <Plus className="h-5 w-5 text-white" />
+      </button>
+
+      {/* Modals */}
+      {detailMemory && (
+        <MemoryDetailModal
+          memory={detailMemory}
+          onClose={() => setDetailMemory(null)}
+        />
+      )}
+
+      <AddMemoryModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
     </div>
   );
 }

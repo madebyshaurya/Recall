@@ -10,6 +10,7 @@ import {
   Terminal,
   ExternalLink,
   ChevronDown,
+  Maximize2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -45,10 +46,12 @@ export function MemoryCard({
   memory,
   similarity,
   index = 0,
+  onOpenDetail,
 }: {
   memory: Memory;
   similarity?: number;
   index?: number;
+  onOpenDetail?: (memory: Memory) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const config = SOURCE_CONFIG[memory.source] || { label: memory.source, color: "bg-gray-500", icon: "Terminal" };
@@ -98,6 +101,26 @@ export function MemoryCard({
             <span className="text-[10px] themed-text-muted font-mono w-6 text-right">
               {timeAgo(memory.captured_at)}
             </span>
+
+            {onOpenDetail && (
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenDetail(memory);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.stopPropagation();
+                    onOpenDetail(memory);
+                  }
+                }}
+                className="p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-white/[0.08] transition-all cursor-pointer"
+              >
+                <Maximize2 className="h-3 w-3 themed-text-muted" />
+              </span>
+            )}
 
             <ChevronDown
               className={`h-3 w-3 themed-text-muted transition-transform duration-150 ${
