@@ -1,4 +1,4 @@
-import { supabase } from '@recall/shared';
+import { supabase } from '../packages/shared/src/supabase.js';
 
 async function main() {
   console.log('Testing Supabase connection...\n');

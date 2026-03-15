@@ -1,4 +1,5 @@
-import { embedText, describeScreenshot } from '@recall/shared';
+import { embedText } from '../packages/shared/src/embeddings.js';
+import { describeScreenshot } from '../packages/shared/src/vision.js';
 import { execFileSync } from 'child_process';
 import { readFileSync } from 'fs';
 
